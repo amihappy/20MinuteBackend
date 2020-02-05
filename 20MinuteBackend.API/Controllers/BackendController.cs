@@ -25,12 +25,7 @@ namespace _20MinuteBackend.API.Controllers
         public async Task<IActionResult> Create()
         {
             var input = await this.HttpContext.BodyAsStringAsync();
-            var uri = await this.backendService.TryCreateNewBackendAsync(input);
-            if (uri is null)
-            {
-                return BadRequest(); //service can return result;
-            }
-
+            var uri = await this.backendService.CreateNewBackendAsync(input);
             return Created(uri, uri);
         }
 

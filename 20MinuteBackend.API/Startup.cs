@@ -1,3 +1,5 @@
+using _20MinuteBackend.API.Middlewares;
+using _20MinuteBackend.API.Services;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.DependencyInjection;
@@ -9,6 +11,8 @@ namespace _20MinuteBackend.API
     {
         public void ConfigureServices(IServiceCollection services)
         {
+            services.AddTransient<IBackendService, BackendService>();
+
             services.AddControllers();
         }
 
@@ -18,6 +22,7 @@ namespace _20MinuteBackend.API
             {
                 app.UseDeveloperExceptionPage();
             }
+            app.UseMiddleware<ExceptionMiddleware>();
 
             app.UseHttpsRedirection();
             app.UseRouting();

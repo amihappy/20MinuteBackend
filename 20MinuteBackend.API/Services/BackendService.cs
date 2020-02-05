@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using _20MinuteBackend.API.Exceptions;
 using Microsoft.Extensions.Configuration;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
@@ -20,19 +21,18 @@ namespace _20MinuteBackend.API.Services
             this.configuration = configuration;
         }
 
-        public Task<Uri> TryCreateNewBackendAsync(string input)
+        public async Task<Uri> CreateNewBackendAsync(string input)
         {
             try
             {
                 var json = JObject.Parse(input);
                 var guid = Guid.NewGuid().ToString();
                 var resultString = $"{configuration[baseUrlKey]}backend/{guid}";
-                return null;
+                return new Uri(resultString);
             }
             catch (JsonReaderException ex)
             {
-                //throws apiexception
-                return null;
+                throw new InvalidJsonInputException(ex.Message);
             }
         }
     }

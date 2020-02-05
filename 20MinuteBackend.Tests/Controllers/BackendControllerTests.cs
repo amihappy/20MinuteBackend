@@ -44,8 +44,8 @@ namespace _20MinuteBackend.Tests.Controllers
             var baseurl = "https://localhost/";
             var guid = Guid.NewGuid().ToString();
             var url = $"{baseurl}/backend/{guid}";
-
-            backendService.Setup(s => s.TryCreateNewBackendAsync(It.IsAny<string>())).ReturnsAsync(() => new Uri(url));
+            Uri actualUri = new Uri(url);
+            backendService.Setup(s => s.CreateNewBackendAsync(It.IsAny<string>())).ReturnsAsync(() => actualUri);
 
             // act
             var actual = await unit.Create();
@@ -72,7 +72,7 @@ namespace _20MinuteBackend.Tests.Controllers
 
             var contextMock = new Mock<HttpContext>();
             contextMock.Setup(s => s.Request).Returns(requestMock.Object);
-            backendService.Setup(s => s.TryCreateNewBackendAsync(It.IsAny<string>())).ReturnsAsync(() => null);
+            backendService.Setup(s => s.CreateNewBackendAsync(It.IsAny<string>())).ReturnsAsync(() => null);
 
             unit.ControllerContext = new ControllerContext
             {
