@@ -12,6 +12,11 @@ namespace _20MinuteBackend.Domain.Backend
 
         public DateTime StartTime { get;}
 
+        private Backend()
+        {
+
+        }
+
         public Backend(string json)
         {
             this.Id = Guid.NewGuid();

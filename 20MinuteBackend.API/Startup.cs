@@ -1,7 +1,10 @@
 using _20MinuteBackend.API.Middlewares;
 using _20MinuteBackend.API.Services;
+using _20MinuteBackend.Infrastructure;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 
@@ -9,9 +12,18 @@ namespace _20MinuteBackend.API
 {
     public class Startup
     {
+        private readonly IConfiguration configuration;
+
+        public Startup(IConfiguration configuration)
+        {
+            this.configuration = configuration;
+        }
+
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddTransient<IBackendService, BackendService>();
+
+            services.AddDbContext<BackendDbContext>(options => options.UseSqlServer(this.configuration.GetConnectionString("BackendContext")));
 
             services.AddControllers();
         }
