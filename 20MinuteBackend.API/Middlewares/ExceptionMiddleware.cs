@@ -34,12 +34,11 @@ namespace _20MinuteBackend.API.Middlewares
 
         public Task HandleApiExceptionAsync(Exception exception, HttpContext context)
         {
-            string errorMessage = string.Empty;
+            string errorMessage = exception.Message;
             HttpStatusCode statusCode = HttpStatusCode.InternalServerError;
 
             if (exception is ApiException ex)
             {
-                errorMessage = ex.Message;
                 statusCode = ex.HttpStatusCode;
             }
 

@@ -10,11 +10,10 @@ namespace _20MinuteBackend.Domain.Backend
 
         public JObject OrginalJson { get; }
 
-        public DateTime StartTime { get;}
+        public DateTime StartTime { get; }
 
         private Backend()
         {
-
         }
 
         public Backend(string json)
@@ -29,6 +28,14 @@ namespace _20MinuteBackend.Domain.Backend
             {
                 throw new JsonParseException(ex);
             }
+        }
+
+        public Uri GetUrl(Uri baseUrl)
+        {
+            if (baseUrl == null)
+                throw new ArgumentNullException(nameof(baseUrl));
+
+            return new Uri(baseUrl, $"/backend/{this.Id}");
         }
     }
 }

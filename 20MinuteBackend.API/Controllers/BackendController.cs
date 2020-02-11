@@ -1,39 +1,33 @@
-﻿using System;
-using System.IO;
-using System.Threading.Tasks;
+﻿using System.Threading.Tasks;
 using _20MinuteBackend.API.Extensions;
 using _20MinuteBackend.API.Services;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.Extensions.Configuration;
-using Newtonsoft.Json;
-using Newtonsoft.Json.Linq;
 
 namespace _20MinuteBackend.API.Controllers
 {
     [Route("[controller]")]
     public class BackendController : ControllerBase
     {
-        private readonly IBackendService backendService;
+        private readonly IBackendService service;
 
         public BackendController(IBackendService backendService)
         {
-            this.backendService = backendService;
+            this.service = backendService;
         }
 
-        [HttpPost]
-        [Route("Create")]
+        [HttpPost("Create")]
         public async Task<IActionResult> Create()
         {
             var input = await this.HttpContext.BodyAsStringAsync();
-            var uri = await this.backendService.CreateNewBackendAsync(input);
+            var uri = await this.service.CreateNewBackendAsync(input);
             return Created(uri, uri);
         }
 
-        [HttpGet]
-        [Route("{guid}")]
+        [HttpGet("{guid}")]
         public async Task<IActionResult> Get(string guid)
         {
-            return Ok(guid);
+            var json = await this.service.GenerateRandomJsonForBackend(guid);
+            return Ok(json);
         }
     }
 }
