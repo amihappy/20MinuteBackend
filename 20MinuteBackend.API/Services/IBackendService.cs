@@ -8,6 +8,8 @@ namespace _20MinuteBackend.API.Services
     {
         Task<Uri> CreateNewBackendAsync(string input);
 
+        Task<Uri> CreateNewBackendAsync(JObject input);
+
         Task<JObject> GenerateRandomJsonForBackend(string id);
     }
 }

@@ -26,6 +26,11 @@ namespace _20MinuteBackend.API.Services
 
         public async Task<Uri> CreateNewBackendAsync(string input)
         {
+            if (string.IsNullOrWhiteSpace(input))
+            {
+                throw new InvalidJsonInputApiException("Body request should contain sample JSON Object.");
+            }
+
             Backend backend;
             try
             {
@@ -36,10 +41,24 @@ namespace _20MinuteBackend.API.Services
                 throw new InvalidJsonInputApiException(ex.Message);
             }
 
+            await SaveBackend(backend);
+            return BackendFullUri(backend);
+        }
+       
+        public async Task<Uri> CreateNewBackendAsync(JObject input)
+        {
+            Backend backend = new Backend(input);
+            await SaveBackend(backend);
+            return BackendFullUri(backend);
+        }
+
+        private Uri BackendFullUri(Backend backend) => backend.GetUrl(new Uri(configuration[baseUrlKey]));
+
+        private async Task SaveBackend(Backend backend)
+        {
             this.dbContext.Backends.Add(backend);
 
             await this.dbContext.SaveChangesAsync();
-            return backend.GetUrl(new Uri(configuration[baseUrlKey]));
         }
 
         public async Task<JObject> GenerateRandomJsonForBackend(string id)

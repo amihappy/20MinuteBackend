@@ -8,6 +8,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using Microsoft.OpenApi.Models;
 
 namespace _20MinuteBackend.API
 {
@@ -29,6 +30,11 @@ namespace _20MinuteBackend.API
 
             services.AddDbContext<BackendDbContext>(options => options.UseSqlServer(this.configuration.GetConnectionString("BackendContext")));
 
+            services.AddSwaggerGen(c =>
+            {
+                c.SwaggerDoc("v1", new OpenApiInfo { Title =  "20 Minute Backend API", Version = "v1"});
+            });
+
             services.AddControllers().AddNewtonsoftJson();
         }
 
@@ -38,6 +44,17 @@ namespace _20MinuteBackend.API
             {
                 app.UseDeveloperExceptionPage();
             }
+
+            app.UseSwagger(o =>
+            {
+                o.RouteTemplate = "api/swagger/{documentName}/swagger.json";
+            });
+            app.UseSwaggerUI(o =>
+            {
+                o.SwaggerEndpoint("swagger/v1/swagger.json", "20 Minute Backend API v1");
+                o.RoutePrefix = "api";
+            });
+
             app.UseMiddleware<ExceptionMiddleware>();
 
             app.UseHttpsRedirection();

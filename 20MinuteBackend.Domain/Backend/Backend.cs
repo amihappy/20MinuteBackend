@@ -14,12 +14,17 @@ namespace _20MinuteBackend.Domain.Backend
 
         private Backend()
         {
-        }
-
-        public Backend(string json)
-        {
             this.Id = Guid.NewGuid();
             this.StartTime = DateTime.UtcNow;
+        }
+
+        public Backend(JObject json) : this()
+        {
+            this.OrginalJson = json;
+        }
+
+        public Backend(string json) : this()
+        {
             try
             {
                 this.OrginalJson = JObject.Parse(json);
