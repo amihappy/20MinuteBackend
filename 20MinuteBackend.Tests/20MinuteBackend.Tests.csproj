@@ -11,8 +11,9 @@
   <ItemGroup>
     <PackageReference Include="AutoFixture.Xunit2" Version="4.11.0" />
     <PackageReference Include="FluentAssertions" Version="5.10.0" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.InMemory" Version="3.1.1" />
     <PackageReference Include="Microsoft.NET.Test.Sdk" Version="16.2.0" />
-    <PackageReference Include="Moq" Version="4.13.1" />
+    <PackageReference Include="NSubstitute" Version="4.2.1" />
     <PackageReference Include="xunit" Version="2.4.0" />
     <PackageReference Include="xunit.runner.visualstudio" Version="2.4.0" />
     <PackageReference Include="coverlet.collector" Version="1.0.1" />
@@ -20,6 +21,9 @@
 
   <ItemGroup>
     <ProjectReference Include="..\20MinuteBackend.API\20MinuteBackend.API.csproj" />
+    <ProjectReference Include="..\20MinuteBackend.Cleaner\20MinuteBackend.Cleaner.csproj" />
+    <ProjectReference Include="..\20MinuteBackend.Domain\20MinuteBackend.Domain.csproj" />
+    <ProjectReference Include="..\20MinuteBackend.Infrastructure\20MinuteBackend.Infrastructure.csproj" />
   </ItemGroup>
 
 </Project>

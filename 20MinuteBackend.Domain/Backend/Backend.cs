@@ -1,4 +1,5 @@
 ﻿using System;
+using _20MinuteBackend.Domain.Time;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 
@@ -14,16 +15,21 @@ namespace _20MinuteBackend.Domain.Backend
 
         private Backend()
         {
-            this.Id = Guid.NewGuid();
-            this.StartTime = DateTime.UtcNow;
+
         }
 
-        public Backend(JObject json) : this()
+        private Backend(IDateTimeProvider dateTimeProvider)
+        {
+            this.Id = Guid.NewGuid();
+            this.StartTime = dateTimeProvider.UtcNow;
+        }
+
+        public Backend(JObject json, IDateTimeProvider dateTimeProvider) : this(dateTimeProvider)
         {
             this.OrginalJson = json;
         }
 
-        public Backend(string json) : this()
+        public Backend(string json, IDateTimeProvider dateTimeProvider) : this(dateTimeProvider)
         {
             try
             {
@@ -33,14 +39,6 @@ namespace _20MinuteBackend.Domain.Backend
             {
                 throw new JsonParseException(ex);
             }
-        }
-
-        public Uri GetUrl(Uri baseUrl)
-        {
-            if (baseUrl == null)
-                throw new ArgumentNullException(nameof(baseUrl));
-
-            return new Uri(baseUrl, $"/backend/{this.Id}");
         }
     }
 }

@@ -1,8 +1,8 @@
 ﻿using System.Collections.Generic;
 using _20MinuteBackend.Domain.Randomizers;
 using FluentAssertions;
-using Moq;
 using Newtonsoft.Json.Linq;
+using NSubstitute;
 using Xunit;
 
 namespace _20MinuteBackend.Tests.Services
@@ -13,9 +13,9 @@ namespace _20MinuteBackend.Tests.Services
         public void When_SimpleJsonPassed_ValueChanged()
         {
             // arrange
-            var randomizer = new Mock<IValueRandomizer>();
-            randomizer.Setup(s => s.Randomize(It.IsAny<JValue>())).Returns("mocked");
-            var unit = new JsonRandomizer(randomizer.Object);
+            var randomizer = Substitute.For<IValueRandomizer>();
+            randomizer.Randomize(Arg.Any<JValue>()).Returns("mocked");
+            var unit = new JsonRandomizer(randomizer);
             var startValue = "test";
             var json = (JObject)JToken.FromObject(new { Name = startValue, Surname = startValue + "s"});
 
@@ -31,9 +31,9 @@ namespace _20MinuteBackend.Tests.Services
         public void When_JsonWithArrayPassed_ValueChanged()
         {
             // arrange
-            var randomizer = new Mock<IValueRandomizer>();
-            randomizer.Setup(s => s.Randomize(It.IsAny<JValue>())).Returns("mocked");
-            var unit = new JsonRandomizer(randomizer.Object);
+            var randomizer = Substitute.For<IValueRandomizer>();
+            randomizer.Randomize(Arg.Any<JValue>()).Returns("mocked");
+            var unit = new JsonRandomizer(randomizer);
             var startValue = "test";
             var json = (JObject)JToken.FromObject(
                 new { Name = startValue,

@@ -11,8 +11,8 @@ using FluentAssertions;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
-using Moq;
 using Newtonsoft.Json;
+using NSubstitute;
 using Xunit;
 
 namespace _20MinuteBackend.Tests.Controllers
@@ -23,25 +23,25 @@ namespace _20MinuteBackend.Tests.Controllers
         public async Task Create_When_ProperJsonPassed_Then_GenerateUrl()
         {
             // arrange 
-            var backendService = new Mock<IBackendService>();
-            var unit = new BackendController(backendService.Object);
-            var bodyMock = new MemoryStream(Encoding.UTF8.GetBytes("{\"Name\":\"Sir\"}"));
-            var requestMock = new Mock<HttpRequest>();
-            requestMock.Setup(s => s.Body).Returns(bodyMock);
+            var backendService = Substitute.For<IBackendService>();
+            var unit = new BackendController(backendService);
+            var bodyStub = new MemoryStream(Encoding.UTF8.GetBytes("{\"Name\":\"Sir\"}"));
+            var requestStub = Substitute.For<HttpRequest>();
+            requestStub.Body.Returns(bodyStub);
 
-            var contextMock = new Mock<HttpContext>();
-            contextMock.Setup(s => s.Request).Returns(requestMock.Object);
+            var contextMock = Substitute.For<HttpContext>();
+            contextMock.Request.Returns(requestStub);
 
             unit.ControllerContext = new ControllerContext
             {
-                HttpContext = contextMock.Object
+                HttpContext = contextMock
             };
 
             var baseurl = "https://localhost/";
             var guid = Guid.NewGuid().ToString();
             var url = $"{baseurl}/backend/{guid}";
             Uri actualUri = new Uri(url);
-            backendService.Setup(s => s.CreateNewBackendAsync(It.IsAny<string>())).ReturnsAsync(() => actualUri);
+            backendService.CreateNewBackendAsync(Arg.Any<string>()).Returns(actualUri);
 
             // act
             var actual = await unit.Create();
