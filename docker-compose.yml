@@ -1,0 +1,25 @@
+version: '3'
+services: 
+    api:
+        build:
+            context: ./
+            dockerfile: ./20MinuteBackend.API/Dockerfile
+        ports: 
+            - "5001:443"
+        depends_on: 
+            - sql
+    cleaner:
+        build:
+            context: ./
+            dockerfile: ./20MinuteBackend.Cleaner/Dockerfile
+        depends_on: 
+            - sql
+            - api
+    sql:
+        image: mcr.microsoft.com/mssql/server:2017-latest-ubuntu
+        ports: 
+            - "1433:1433"
+        environment: 
+            - ACCEPT_EULA=Y
+            - SA_PASSWORD=123123123Aa
+            - MSSQL_PID=Express

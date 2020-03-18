@@ -9,10 +9,11 @@ using Microsoft.Extensions.Logging;
 
 namespace _20MinuteBackend.Cleaner
 {
-    public class Worker : BackgroundService
+    public class Worker : IHostedService
     {
         private readonly ILogger<Worker> logger;
         private readonly IServiceProvider serviceScopeFactory;
+        private Timer timer;
 
         public Worker(ILogger<Worker> logger, IServiceProvider serviceScopeFactory)
         {
@@ -20,7 +21,19 @@ namespace _20MinuteBackend.Cleaner
             this.serviceScopeFactory = serviceScopeFactory;
         }
 
-        protected override async Task ExecuteAsync(CancellationToken stoppingToken)
+        public Task StartAsync(CancellationToken cancellationToken)
+        {
+            this.timer = new Timer(DoWork, null, TimeSpan.Zero, TimeSpan.FromMinutes(1));
+            return Task.CompletedTask;
+        }
+
+        public Task StopAsync(CancellationToken cancellationToken)
+        {
+            this.timer.Change(Timeout.Infinite, 0);
+            return Task.CompletedTask;
+        }
+
+        private async void DoWork(object state)
         {
             logger.LogInformation("Worker running at: {time}", DateTimeOffset.Now);
             using (var scope = this.serviceScopeFactory.CreateScope())
