@@ -1,3 +1,4 @@
+using System;
 using _20MinuteBackend.API.Middlewares;
 using _20MinuteBackend.API.Services;
 using _20MinuteBackend.Domain.Randomizers;
@@ -5,12 +6,17 @@ using _20MinuteBackend.Domain.Time;
 using _20MinuteBackend.Infrastructure;
 using _20MinuteBackend.Infrastructure.Time;
 using Microsoft.AspNetCore.Builder;
+using Microsoft.AspNetCore.Diagnostics.HealthChecks;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.Data.SqlClient;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Diagnostics.HealthChecks;
 using Microsoft.Extensions.Hosting;
+using Microsoft.Extensions.Logging;
 using Microsoft.OpenApi.Models;
+using Polly;
 
 namespace _20MinuteBackend.API
 {
@@ -32,7 +38,12 @@ namespace _20MinuteBackend.API
 
             services.AddTransient<IDateTimeProvider, DateTimeProvider>();
 
-            services.AddDbContext<BackendDbContext>(options => options.UseSqlServer(this.configuration.GetConnectionString("BackendContext")));
+            services.AddHealthChecks()
+                .AddCheck("liveness", () => HealthCheckResult.Unhealthy())
+                .AddDbContextCheck<BackendDbContext>("readiness", HealthStatus.Degraded, tags: new[] { "readiness" });
+
+            services.AddDbContext<BackendDbContext>(options => options.UseSqlServer(this.configuration.GetConnectionString("BackendContext"), 
+                options => options.EnableRetryOnFailure()));
 
             services.AddSwaggerGen(c =>
             {
@@ -60,11 +71,20 @@ namespace _20MinuteBackend.API
             });
 
             app.UseMiddleware<ExceptionMiddleware>();
-
             app.UseHttpsRedirection();
             app.UseRouting();
 
-            app.UseEndpoints(endpoints => endpoints.MapControllers());
+            app.UseEndpoints(endpoints => {
+                endpoints.MapControllers();
+                endpoints.MapHealthChecks("api/health/live", new HealthCheckOptions()
+                {
+                    Predicate = _ => false
+                });
+                endpoints.MapHealthChecks("api/health/ready", new HealthCheckOptions()
+                {
+                    Predicate = check => check.Tags.Contains("readiness"),
+                });
+            });
 
             using var scope = app.ApplicationServices.GetRequiredService<IServiceScopeFactory>().CreateScope();
             scope.ServiceProvider.GetService<BackendDbContext>().Database.Migrate();

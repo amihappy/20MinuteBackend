@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
+using Microsoft.Data.SqlClient;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
@@ -39,7 +40,14 @@ namespace _20MinuteBackend.Cleaner
             using (var scope = this.serviceScopeFactory.CreateScope())
             {
                 var cleanBackendService = scope.ServiceProvider.GetService<ICleanBackendService>();
-                await cleanBackendService.CleanInactiveBackendInstances();
+                try
+                {
+                    await cleanBackendService.CleanInactiveBackendInstances();
+                }
+                catch (SqlException ex)
+                {
+                    logger.LogError(ex.Message, ex);
+                }
             }
         }
     }

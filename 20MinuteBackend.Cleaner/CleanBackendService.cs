@@ -40,7 +40,7 @@ namespace _20MinuteBackend.Cleaner
             }
             else
             {
-                throw new Exception($"Missing value for {inactivityMinutesKey} or it can't be parsed as an integer");
+                throw new ArgumentException($"Missing value for {inactivityMinutesKey} or it can't be parsed as an integer");
             }
         }
     }
