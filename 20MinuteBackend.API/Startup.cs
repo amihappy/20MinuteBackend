@@ -42,12 +42,12 @@ namespace _20MinuteBackend.API
                 .AddCheck("liveness", () => HealthCheckResult.Unhealthy())
                 .AddDbContextCheck<BackendDbContext>("readiness", HealthStatus.Degraded, tags: new[] { "readiness" });
 
-            services.AddDbContext<BackendDbContext>(options => options.UseSqlServer(this.configuration.GetConnectionString("BackendContext"), 
+            services.AddDbContext<BackendDbContext>(options => options.UseSqlServer(this.configuration.GetConnectionString("BackendContext"),
                 options => options.EnableRetryOnFailure()));
 
             services.AddSwaggerGen(c =>
             {
-                c.SwaggerDoc("v1", new OpenApiInfo { Title =  "20 Minute Backend API", Version = "v1"});
+                c.SwaggerDoc("v1", new OpenApiInfo { Title = "20 Minute Backend API", Version = "v1" });
             });
 
             services.AddControllers().AddNewtonsoftJson();
@@ -74,7 +74,8 @@ namespace _20MinuteBackend.API
             app.UseHttpsRedirection();
             app.UseRouting();
 
-            app.UseEndpoints(endpoints => {
+            app.UseEndpoints(endpoints =>
+            {
                 endpoints.MapControllers();
                 endpoints.MapHealthChecks("api/health/live", new HealthCheckOptions()
                 {
@@ -87,7 +88,14 @@ namespace _20MinuteBackend.API
             });
 
             using var scope = app.ApplicationServices.GetRequiredService<IServiceScopeFactory>().CreateScope();
-            scope.ServiceProvider.GetService<BackendDbContext>().Database.Migrate();
+            var logger = scope.ServiceProvider.GetRequiredService<ILogger<Startup>>();
+            var sqlSetupPolicy = Policy.Handle<SqlException>().WaitAndRetry(new[] {
+                TimeSpan.FromSeconds(10),
+                TimeSpan.FromSeconds(30),
+                TimeSpan.FromSeconds(60)
+            },
+            (e, t) => logger.LogWarning($"{e.Message}, retry in {t.TotalSeconds} seconds"));
+            sqlSetupPolicy.Execute(() => scope.ServiceProvider.GetService<BackendDbContext>().Database.Migrate());
         }
     }
 }
