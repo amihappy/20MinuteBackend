@@ -1,0 +1,28 @@
+trigger:
+- master
+- develop
+
+pool:
+  vmImage: 'ubuntu-latest'
+
+steps:
+- task: DotNetCoreCLI@2
+  displayName: 'Restore Nuget packages'
+  inputs:
+    command: 'restore'
+    projects: '**/*.csproj'
+    feedsToUse: 'select'
+    vstsFeed: '7635c770-36ac-4775-8df6-f13bc6b23beb'
+- task: DotNetCoreCLI@2
+  displayName: 'Build API'
+  continueOnError: true
+  inputs:
+    command: 'build'
+    projects: '$(Build.Repository.LocalPath)/20MinuteBackend.API/20MinuteBackend.API.csproj'
+
+- task: DotNetCoreCLI@2
+  displayName: 'Build Cleaner'
+  inputs:
+    command: 'build'
+    projects: '20MinuteBackend.Cleaner/20MinuteBackend.Cleaner.csproj'    
+
