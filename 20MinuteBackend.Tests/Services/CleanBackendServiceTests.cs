@@ -5,12 +5,13 @@ using _20MinuteBackend.Cleaner;
 using _20MinuteBackend.Domain.Backend;
 using _20MinuteBackend.Domain.Time;
 using _20MinuteBackend.Infrastructure;
-using _20MinuteBackend.Infrastructure.Time;
+using Microsoft.Data.SqlClient;
 using FluentAssertions;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using NSubstitute;
 using Xunit;
+using System.Runtime.CompilerServices;
 
 namespace _20MinuteBackend.Tests.Services
 {
@@ -80,9 +81,9 @@ namespace _20MinuteBackend.Tests.Services
                 this.CleanBackendService = new CleanBackendService(configuration, dbContext, dateTimeProvider);
             }
 
-            public static CleanBackendServiceTest Create()
+            public static CleanBackendServiceTest Create([CallerMemberName]string testName = "")
             {
-                var options = new DbContextOptionsBuilder<BackendDbContext>().UseInMemoryDatabase("backends").Options;
+                var options = new DbContextOptionsBuilder<BackendDbContext>().UseInMemoryDatabase(testName).Options;
                 var config = Substitute.For<IConfiguration>();
                 var context = new BackendDbContext(options);
                 var dateTimeProvider = Substitute.For<IDateTimeProvider>();
@@ -91,7 +92,7 @@ namespace _20MinuteBackend.Tests.Services
 
             public void Dispose()
             {
-                DbContext?.Dispose();
+                this.DbContext?.Dispose();
             }
         }
     }

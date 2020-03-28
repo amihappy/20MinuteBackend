@@ -27,6 +27,7 @@ steps:
     projects: '20MinuteBackend.Cleaner/20MinuteBackend.Cleaner.csproj'    
 
 - task: DotNetCoreCLI@2
+  displayName: 'Run (X)Unit Tests'
   inputs:
     command: 'test'
     projects: '20MinuteBackend.Tests/20MinuteBackend.Tests.csproj'

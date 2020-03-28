@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Linq;
+using System.Runtime.CompilerServices;
 using System.Threading.Tasks;
 using _20MinuteBackend.API.Exceptions;
 using _20MinuteBackend.API.Services;
@@ -91,9 +92,9 @@ namespace _20MinuteBackend.Tests.Services
 
 
 
-            public static BackendServiceTest Create()
+            public static BackendServiceTest Create([CallerMemberName]string testName = "")
             {
-                var options = new DbContextOptionsBuilder<BackendDbContext>().UseInMemoryDatabase("backends").Options;
+                var options = new DbContextOptionsBuilder<BackendDbContext>().UseInMemoryDatabase(testName).Options;
                 var config = Substitute.For<IConfiguration>();
                 var context = new BackendDbContext(options);
                 var randomizer = Substitute.For<IJsonRandomizer>();
