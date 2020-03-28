@@ -26,11 +26,7 @@ steps:
     command: 'build'
     projects: '20MinuteBackend.Cleaner/20MinuteBackend.Cleaner.csproj'    
 
-- task: VSTest@2
+- task: DotNetCoreCLI@2
   inputs:
-    testSelector: 'testAssemblies'
-    testAssemblyVer2: |
-      **\*tests*.dll
-      !**\*TestAdapter.dll
-      !**\obj\**
-    searchFolder: '$(System.DefaultWorkingDirectory)'
+    command: 'test'
+    projects: '220MinuteBackend.Tests/20MinuteBackend.Tests.csproj'
