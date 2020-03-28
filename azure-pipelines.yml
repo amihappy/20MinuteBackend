@@ -26,3 +26,11 @@ steps:
     command: 'build'
     projects: '20MinuteBackend.Cleaner/20MinuteBackend.Cleaner.csproj'    
 
+- task: VSTest@2
+  inputs:
+    testSelector: 'testAssemblies'
+    testAssemblyVer2: |
+      **\*tests*.dll
+      !**\*TestAdapter.dll
+      !**\obj\**
+    searchFolder: '$(System.DefaultWorkingDirectory)'
