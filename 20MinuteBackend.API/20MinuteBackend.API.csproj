@@ -27,4 +27,8 @@
     <ProjectReference Include="..\20MinuteBackend.Infrastructure\20MinuteBackend.Infrastructure.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="Properties\PublishProfiles\" />
+  </ItemGroup>
+
 </Project>

@@ -50,6 +50,16 @@ namespace _20MinuteBackend.API
                 c.SwaggerDoc("v1", new OpenApiInfo { Title = "20 Minute Backend API", Version = "v1" });
             });
 
+            services.AddCors(options =>
+            {
+                options.AddDefaultPolicy(builder =>
+                {
+                    builder.WithOrigins("https://localhost:4200").AllowAnyHeader();
+                    builder.WithOrigins("http://localhost:4200").AllowAnyHeader();
+                    builder.AllowAnyOrigin().AllowAnyHeader();
+                });
+            });
+
             services.AddControllers().AddNewtonsoftJson();
         }
 
@@ -73,6 +83,8 @@ namespace _20MinuteBackend.API
             app.UseMiddleware<ExceptionMiddleware>();
             app.UseHttpsRedirection();
             app.UseRouting();
+
+            app.UseCors();
 
             app.UseEndpoints(endpoints =>
             {

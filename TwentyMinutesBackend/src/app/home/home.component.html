@@ -1,2 +1,2 @@
-<app-input></app-input>
-<app-output></app-output>
+<app-input (backendCreated)="onBackendCreated($event)"></app-input>
+<app-output [backendData]="backendData"></app-output>

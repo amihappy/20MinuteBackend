@@ -19,9 +19,10 @@ namespace _20MinuteBackend.Tests.Services
     public class BackendServiceTests
     {
         [Theory]
-        [InlineData("http://localhost:5000/")]
-        [InlineData("http://localhost:5000")]
-        public async Task GetUrl_When_BaseUrlPassed_Then_ProperUriReturned(string baseUrl)
+        [InlineData("http://localhost:5000/", "http://localhost:5000/api/backend/")]
+        [InlineData("http://localhost:5000", "http://localhost:5000/api/backend/")]
+        [InlineData("http://localhost:5000/back", "http://localhost:5000/back/api/backend/")]
+        public async Task GetUrl_When_BaseUrlPassed_Then_ProperUriReturned(string baseUrl, string expected)
         {
             // arrange
             using (var testClass = BackendServiceTest.Create())
@@ -33,7 +34,7 @@ namespace _20MinuteBackend.Tests.Services
                 var actual = await testClass.BackendService.CreateNewBackendAsync("{}");
 
                 // assert
-                actual.ToString().Should().StartWith("http://localhost:5000/api/backend/");
+                actual.ToString().Should().StartWith(expected);
             }
         }
 

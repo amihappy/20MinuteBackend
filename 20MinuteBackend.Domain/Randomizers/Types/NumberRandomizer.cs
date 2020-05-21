@@ -5,17 +5,12 @@ namespace _20MinuteBackend.Domain.Randomizers
 
     public class NumberRandomizer : IDataTypeRandomizer
     {
-        private readonly double number;
         private static Random random = new Random();
 
-        public NumberRandomizer(double number)
+        public string RandomizeValue(string value)
         {
-            this.number = number;
-        }
-
-        public string RandomizeValue()
-        {
-            var fraction = this.number % Math.Round(this.number);
+            double number = double.Parse(value);
+            var fraction = number % Math.Round(number);
             if (fraction > 0)
             {
                 fraction = random.NextDouble();

@@ -2,6 +2,6 @@
 {
     public interface IDataTypeRandomizer
     {
-        string RandomizeValue();
+        string RandomizeValue(string value);
     }
 }

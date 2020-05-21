@@ -55,8 +55,14 @@ namespace _20MinuteBackend.API.Services
             return BackendFullUri(backend);
         }
 
-        private Uri BackendFullUri(Backend backend) =>
-            new Uri(new Uri(configuration[baseUrlKey]), $"api/backend/{backend.Id}");
+        private Uri BackendFullUri(Backend backend)
+        {
+            int lastslash = this.configuration[baseUrlKey].LastIndexOf('/');
+            var baseUrl = lastslash == this.configuration[baseUrlKey][0..^1].Length
+                ? this.configuration[baseUrlKey].Substring(0, lastslash)
+                : this.configuration[baseUrlKey];
+            return new Uri($"{baseUrl}/api/backend/{backend.Id}");
+        }
 
         private async Task SaveBackend(Backend backend)
         {

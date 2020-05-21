@@ -15,7 +15,6 @@ namespace _20MinuteBackend.Domain.Backend
 
         private Backend()
         {
-
         }
 
         private Backend(IDateTimeProvider dateTimeProvider)

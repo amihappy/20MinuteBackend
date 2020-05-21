@@ -12,10 +12,10 @@ namespace _20MinuteBackend.Tests.Services.Randomizers.Types
         public void RandomizeValue_When_StringPassed_Then_NewStringReturnedWithSameLength(string randomString)
         {
             // arrange
-            var unit = new StringRandomizer(randomString);
+            var unit = new StringRandomizer();
 
             // act
-            var actual = unit.RandomizeValue();
+            var actual = unit.RandomizeValue(randomString);
 
             // assert
             actual.Should().NotBe(randomString);

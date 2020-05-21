@@ -11,23 +11,23 @@ namespace _20MinuteBackend.Tests.Services.Randomizers.Types
         public void RandomizeValue_When_NoFraction_Then_IntReturned()
         {
             // arrange
-            var unit = new NumberRandomizer(123);
+            var unit = new NumberRandomizer();
 
             // act
-            var actual = unit.RandomizeValue();
+            var actual = unit.RandomizeValue("123");
 
             // assert
-            int.TryParse(actual, out int res).Should().BeTrue();
+            int.TryParse(actual, out _).Should().BeTrue();
         }
 
         [Fact]
         public void RandomizeValue_When_Fraction_Then_NumberWithFractionReturned()
         {
             // arrange
-            var unit = new NumberRandomizer(123.4);
+            var unit = new NumberRandomizer();
 
             // act
-            var actual = unit.RandomizeValue();
+            var actual = unit.RandomizeValue("123.4");
 
             // assert
             int.TryParse(actual, out _).Should().BeFalse();

@@ -16,7 +16,7 @@ namespace _20MinuteBackend.Domain.Randomizers
         public string Randomize(JValue value)
         {
             var randomizer = this.dataRandomizerFactory.Create(value.ToString());
-            return randomizer.RandomizeValue();
+            return randomizer.RandomizeValue(value.ToString());
         }
     }
 }
