@@ -5,10 +5,16 @@ services:
             context: ./
             dockerfile: ./20MinuteBackend.API/Dockerfile
         ports: 
-            - "5000:80"
-            - "5001:443"
+            - "80:80"
+            - "443:443"
         environment: 
             - ConnectionStrings__BackendContext=Server=sql;Database=Backend;User Id=sa;Password=123123123Aa;
+            - BaseUrl=https://localhost/
+            - ASPNETCORE_Kestrel__Certificates__Default__Path=/https/aspnetapp.pfx
+            - ASPNETCORE_Kestrel__Certificates__Default__Password=123
+            - ASPNETCORE_URLS=https://+:443;http://+:80
+        volumes:
+            - ~/.aspnet/https:/https:ro
         depends_on: 
             - sql
     cleaner:
