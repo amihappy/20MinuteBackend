@@ -1,9 +1,15 @@
 <div *ngIf="backendData != null">
-  <div >
-    {{backendData.url}}
-    </div>
   <div>
-    <textarea rows="10">{{backendData.data | json}}</textarea>
+<p>You can get your randomized Json from here:</p>
   </div>
-
+  <div class="BackendDataUrl">
+    <a href="{{backendData.url}}" target="blank">{{backendData.url}}</a>
+    <p>Link will be invalid after 20 minutes :)</p>
+    </div>
+  <div class="OutputArea">
+    <p>
+      Json Sample:
+    </p>
+    <textarea rows="15">{{backendData.data | json}}</textarea>
+  </div>
 </div>
