@@ -14,7 +14,7 @@ services:
             - ASPNETCORE_Kestrel__Certificates__Default__Password=123
             - ASPNETCORE_URLS=https://+:443;http://+:80
         volumes:
-            - ~/.aspnet/https:/https:ro
+            - ~/.aspnet/https:/https
         depends_on: 
             - sql
     cleaner:
